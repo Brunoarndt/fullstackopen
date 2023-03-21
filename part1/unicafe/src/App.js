@@ -6,6 +6,21 @@ const Botao = ({handleCLique, texto}) => (
   </button>
 )
 
+// lugar adequado para definir um componente
+const Statistics = ({ good, neutral, bad, total, media }) => {
+  
+  return (
+    <div>
+    <p>good {good} </p>
+      <p>neutral {neutral} </p>
+      <p>bad {bad} </p>
+      <p>all {total}</p>
+      <p>average {(good-bad)/media} </p>
+      <p>positive {(good*100)/total} %</p>
+  </div>
+  )
+}
+
 const App = () => {
   // salve os cliques de cada botão em seu próprio estado
   const [good, setGood] = useState(0)
@@ -38,12 +53,14 @@ const App = () => {
       <Botao handleCLique={handleCLiqueNeutral} texto="neutral"/>
       <Botao handleCLique={handleCLiqueBad} texto="bad"/>
       <p>Statistics</p>
-      <p>good {good} </p>
-      <p>neutral {neutral} </p>
-      <p>bad {bad} </p>
-      <p>all {total}</p>
-      <p>average {media} </p>
-      <p>positive {(good/total)*100} %</p>
+      <Statistics 
+        good={good} 
+        neutral={neutral}
+        bad={bad}
+        total={total}
+        media={media}
+      />
+      
     </div>
   )
 }
