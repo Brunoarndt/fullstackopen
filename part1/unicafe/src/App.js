@@ -10,14 +10,20 @@ const Botao = ({handleCLique, texto}) => (
 const Statistics = ({ good, neutral, bad, total, media }) => {
   
   return (
-    <div>
-    <p>good {good} </p>
-      <p>neutral {neutral} </p>
-      <p>bad {bad} </p>
-      <p>all {total}</p>
-      <p>average {(good-bad)/media} </p>
-      <p>positive {(good*100)/total} %</p>
-  </div>
+  <div>
+    {!total ? (
+      <div>Sem feedback por enquanto!!</div>
+    ) : (
+      <div>
+        <p>good {good} </p>
+        <p>neutral {neutral} </p>
+        <p>bad {bad} </p>
+        <p>all {total}</p>
+        <p>average {(good-bad)/media} </p>
+        <p>positive {(good*100)/total} %</p>
+    </div>
+    )}
+    </div>
   )
 }
 
