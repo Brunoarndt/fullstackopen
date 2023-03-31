@@ -15,9 +15,10 @@ const Content = ({parts}) => {
 }
 
 const Total = ({sum}) => {
+  const soma = sum.reduce( ( sum, { exercises } ) => sum + exercises , 0)
   return (
     <>
-      <p>a soma é {sum[0].exercises + sum[1].exercises + sum[2].exercises} </p>
+      <p>a soma é {soma} </p>
     </>
   )
 }
