@@ -1,59 +1,59 @@
-const Header = ({ course }) => <h1>{course}</h1>
-
-const Content = ({parts}) => {
-  return (
-    <>
-      <ul>
-        {parts.map(parts => 
-          <li key={parts.id}>
-            {parts.name} {parts.exercises}
-          </li>
-        )}
-      </ul>
-    </>
-  );
-}
-
-const Total = ({sum}) => {
-  const soma = sum.reduce( ( sum, { exercises } ) => sum + exercises , 0)
-  return (
-    <>
-      <p>a soma é {soma} </p>
-    </>
-  )
-}
-
+import React, { useState } from 'react';
+import Course from './Course';
 
 const App = () => {
-  const course = {
-    id: 1,
-    name: 'Half Stack application development',
-    parts: [
+  const [courses, setCourses] = useState([
+    {
+        name: 'Half Stack application development',
+        id: 1,
+        parts: [
+          {
+            name: 'Fundamentals of React',
+            exercises: 10,
+            id: 1
+          },
+          {
+            name: 'Using props to pass data',
+            exercises: 7,
+            id: 2
+          },
+          {
+            name: 'State of a component',
+            exercises: 14,
+            id: 3
+          },
+          {
+            name: 'Redux',
+            exercises: 11,
+            id: 4
+          }
+        ]
+      }, 
       {
-        name: 'Fundamentals of React',
-        exercises: 10,
-        id: 1
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7,
-        id: 2
-      },
-      {
-        name: 'State of a component',
-        exercises: 14,
-        id: 3
+        name: 'Node.js',
+        id: 2,
+        parts: [
+          {
+            name: 'Routing',
+            exercises: 3,
+            id: 1
+          },
+          {
+            name: 'Middlewares',
+            exercises: 7,
+            id: 2
+          }
+        ]
       }
-    ]
-  }
+  ]);
+
   return (
     <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total sum={course.parts} />
+      {courses.map((course) => (
+        <Course key={course.id} course={course} />
+      ))}
     </div>
-  )
-  
-}
+  );
+};
 
-export default App
+export default App;
