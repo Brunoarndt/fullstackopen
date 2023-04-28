@@ -7,11 +7,15 @@ const App = () => {
   const [newName, setNewName] = useState('')
 
   const handleNameChange = (event) => { 
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
   const handleSubmit = (event) => {
     event.preventDefault()
+    if(persons.some((person) => person.name.toLowerCase() === newName.toLowerCase())){
+      alert(`${newName} is already added to phonebook`);
+      setNewName("");
+      return;
+    }
     const personObject = {
       name: newName,
     }
