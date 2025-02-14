@@ -11,7 +11,6 @@ const App = () => {
     { name: "Dan Abramov", number: "12-43-234345", id: 3 },
     { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
-  const [person, setPerson] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
@@ -34,16 +33,19 @@ const App = () => {
       return;
     }
     const personObject = { name: newName, number: newNumber };
-    setPersons(persons.concat(personObject));
-    setNewName("");
-    setNewNumber("");
+    
+    axios
+        .post('http://localhost:3001/Persons', personObject)
+        .then(response => {
+          setPersons(persons.concat(personObject));
+          setNewName("");
+          setNewNumber("");
+        })
   };
 
   useEffect(() => {
-    console.log('effect (efeito)')
     axios.get('http://localhost:3001/persons').then((response) => {
-      console.log('promise fulfilled (promessa resolvida)')
-      setPerson(response.data)
+      setPersons(response.data)
     })
   }, [])
 
