@@ -26,6 +26,17 @@ const App = () => {
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
+  const removePerson = (id) =>{
+    personService
+      .remove(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id))
+      })
+      .catch(error => {
+        console.log('Erro ao excluir contato:', error);
+      
+    })
+  }
   const addPerson = (event) => {
     event.preventDefault();
     if (persons.some((person) => person.name.toLowerCase() === newName.toLowerCase())) {
@@ -66,7 +77,7 @@ const App = () => {
         addPerson={addPerson}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} remove={removePerson} filter={filter} />
     </div>
   );
 };
