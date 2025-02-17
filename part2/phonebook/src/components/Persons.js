@@ -5,12 +5,16 @@ const Persons = ({ persons, filter, remove }) => {
     <>
       <h2>Numbers</h2>
       {persons
-        .filter((person) =>
-          person.name.toLowerCase().includes(filter.toLowerCase())
-        )
+        .filter((person) => {
+          if(!person || !person.name){
+            console.warn('Invalid value in persons:', persons)
+            return false
+          }
+          return person.name.toLowerCase().includes(filter.toLowerCase())
+        })
         .map((person) => {
           return (
-            <div key={person.id}>
+            <div key={person.name}>
               <p>
               {person.name} {person.number}
             </p>

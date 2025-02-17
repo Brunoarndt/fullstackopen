@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": 1
-    },
-    {
       "name": "Dan Abramov",
       "number": "12-43-234345",
       "id": 3
@@ -16,13 +11,13 @@
       "id": 4
     },
     {
-      "name": "bruno",
-      "number": "1891891209",
+      "name": "xadrez",
+      "number": "181819",
       "id": 5
     },
     {
-      "name": "jose",
-      "number": "109",
+      "name": "arthur",
+      "number": "1819",
       "id": 6
     }
   ]

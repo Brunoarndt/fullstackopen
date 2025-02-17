@@ -27,26 +27,56 @@ const App = () => {
     setFilter(e.target.value);
   };
   const removePerson = (id) =>{
-    personService
-      .remove(id)
-      .then(() => {
-        setPersons(persons.filter(person => person.id !== id))
-      })
-      .catch(error => {
-        console.log('Erro ao excluir contato:', error);
-      
-    })
-  }
+    const deletedPerson = persons.find(n => n.id === id)
+    const result = window.confirm(`Delete ${deletedPerson.name}?`)
+  
+    if(result === true ){
+      personService
+            .remove(id)
+            .then(() => {
+              setPersons(persons.filter(person => person.id !== id))
+            })
+            .catch(error => {
+              console.log('Error deleting:', error);
+            })
+          }
+    }
+    
   const addPerson = (event) => {
     event.preventDefault();
-    if (persons.some((person) => person.name.toLowerCase() === newName.toLowerCase())) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName("");
-      setNewNumber("");
+
+    const existedPerson = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase()); 
+
+    if (existedPerson) { 
+      const result = window.confirm(`${newName} is already added to phonebook, replace the older number with a new one?`)
+      
+      if(result){
+        const changedNumber = {...existedPerson, number: newNumber}
+
+        personService
+        .update(existedPerson.id, changedNumber)
+        .then(returnedPerson => {
+          setPersons(persons.map(person =>
+            person.id === existedPerson.id ? returnedPerson : person
+          ))
+          setNewName("");
+          setNewNumber(""); 
+        })
+        .catch(error => {
+          console.log('Error updating:', error);
+          
+        })
+      }
+      else{
+        setNewName("");
+        setNewNumber(""); 
+      }
+      
       return;
     }
     
-    const personObject = { name: newName, number: newNumber };
+
+    const personObject = { name: newName, number: newNumber};
     
     personService
       .create(personObject)
@@ -61,7 +91,13 @@ const App = () => {
     personService
       .getAll()
       .then(initialPerson => {
+        console.log('Data loaded from backend', initialPerson);
+        
         setPersons(initialPerson)
+      })
+      .catch(error => {
+        console.log('Error fetching contacts', error);
+        
       })
   }, [])
 
