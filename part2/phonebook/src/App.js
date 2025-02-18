@@ -17,7 +17,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
-  const [successfulMessage, setSuccessfulMessage] = useState(null)
+  const [notification, setNotification] = useState({message: null, type: ''})
+
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -63,13 +64,16 @@ const App = () => {
           ))
           setNewName("");
           setNewNumber("");
-          setSuccessfulMessage(`Changed ${newName} number`)
+          setNotification({message: `Changed ${newName} number`, type: "successful"})
           setTimeout(() => {
-            setSuccessfulMessage(null)
+            setNotification({message: null, type: ""})
           }, 5000)
         })
         .catch(error => {
-          console.log('Error updating:', error);
+          setNotification({message: `Information of ${newName} has already been removed from server`, type: "error"})
+          setTimeout(() => {
+            setNotification({message: null, type: ""})
+          }, 5000)
         })
       }
       else{
@@ -89,12 +93,19 @@ const App = () => {
         setPersons(persons.concat(personObject));
         setNewName("");
         setNewNumber("");
+        setNotification({message: `Added ${newName}`, type: 'succesful'})
+        setTimeout(() => {
+          setNotification({message: null, type: ""})
+        }, 5000)
+        .catch(error => {
+          setNotification({message: `Information of ${newName} has already been removed from server`, type: "error"})
+          setTimeout(() => {
+            setNotification({message: null, type: ""})
+          }, 5000)
+        })
       })
     
-      setSuccessfulMessage(`Added ${newName}`)
-      setTimeout(() => {
-        setSuccessfulMessage(null)
-      }, 5000)
+      
   };
 
   useEffect(() => {
@@ -114,7 +125,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successfulMessage}></Notification>
+      <Notification message={notification.message} type={notification.type}></Notification>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <PersonForm
         newName={newName}
