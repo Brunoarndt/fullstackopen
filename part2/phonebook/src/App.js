@@ -5,6 +5,7 @@ import personService from "./services/persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -16,6 +17,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [successfulMessage, setSuccessfulMessage] = useState(null)
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -50,7 +52,7 @@ const App = () => {
     if (existedPerson) { 
       const result = window.confirm(`${newName} is already added to phonebook, replace the older number with a new one?`)
       
-      if(result){
+      if(result){        
         const changedNumber = {...existedPerson, number: newNumber}
 
         personService
@@ -60,11 +62,14 @@ const App = () => {
             person.id === existedPerson.id ? returnedPerson : person
           ))
           setNewName("");
-          setNewNumber(""); 
+          setNewNumber("");
+          setSuccessfulMessage(`Changed ${newName} number`)
+          setTimeout(() => {
+            setSuccessfulMessage(null)
+          }, 5000)
         })
         .catch(error => {
           console.log('Error updating:', error);
-          
         })
       }
       else{
@@ -85,6 +90,11 @@ const App = () => {
         setNewName("");
         setNewNumber("");
       })
+    
+      setSuccessfulMessage(`Added ${newName}`)
+      setTimeout(() => {
+        setSuccessfulMessage(null)
+      }, 5000)
   };
 
   useEffect(() => {
@@ -104,6 +114,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successfulMessage}></Notification>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <PersonForm
         newName={newName}
