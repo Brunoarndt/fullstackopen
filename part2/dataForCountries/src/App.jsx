@@ -19,8 +19,6 @@ function App() {
         .get('https://restcountries.com/v3.1/all')
         .then(response => {
           setCountry(response.data)
-          console.log(country);
-          
         })
         .catch(error => console.error("Error searching for countries", error));
     }
