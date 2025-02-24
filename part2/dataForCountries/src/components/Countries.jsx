@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -8,12 +9,10 @@ const Countries = ({ country, search }) => {
 
     const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
 
-    // Filtragem dos países
     const filteredCountries = country.filter((c) => 
         c.name.common.toLowerCase().includes(search.toLowerCase())
     );
 
-    // Atualiza os detalhes do país ao clicar no botão
     useEffect(() => {
         if (selectedCountry) {
             const countryData = country.find((c) => c.name.common === selectedCountry);
@@ -21,7 +20,6 @@ const Countries = ({ country, search }) => {
         }
     }, [selectedCountry, country]);
 
-    // Busca dados de clima ao selecionar um país
     useEffect(() => {
         if (selectedCountryData && apiKey) {
             axios
@@ -34,7 +32,7 @@ const Countries = ({ country, search }) => {
                     setWeather(null);
                 });
         }
-    }, [selectedCountryData, apiKey]); // 🔥 Só roda quando `selectedCountryData` realmente muda
+    }, [selectedCountryData, apiKey]); 
 
     const renderCountryDetails = (country) => {
         return (
