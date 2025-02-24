@@ -29,6 +29,27 @@ const date = new Date()
 
 app.use(express.json())
 
+
+app.post('/api/persons/:id', (request, response) => {
+    const body = request.body
+
+    if(!body.name){
+        return response.status(400).json({
+            error: 'error content missing'
+        })
+    }
+
+    const person = {
+        id: Math.floor(Math.random() * 101),
+        name: body.name,
+        number: body.number,
+    }
+
+    persons = persons.concat(person)
+
+    response.json(person)
+})
+
 app.get('/info', (request, response) => {
     response.send(`<h1>Phonebook has info for ${persons.length} people</h1> <h1>${date}</h1>`)
 })
