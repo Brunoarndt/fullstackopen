@@ -1,5 +1,5 @@
 const express = require('express')
-const app = express()
+const app = express() 
 
 let persons = [
     { 
@@ -24,10 +24,13 @@ let persons = [
     }
 ]
 
+let contacts = persons.length
+const date = new Date()
+
 app.use(express.json())
 
-app.get('/', (request, response) => {
-    response.send('<h1>Hello world</h1>')
+app.get('/info', (request, response) => {
+    response.send(`<h1>Phonebook has info for ${persons.length} people</h1> <h1>${date}</h1>`)
 })
 
 app.get('/api/persons', (request, response) => {
