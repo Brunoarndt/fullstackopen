@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express() 
+const PORT = 3001
 
 let persons = [
     { 
@@ -24,7 +25,6 @@ let persons = [
     }
 ]
 
-let contacts = persons.length
 const date = new Date()
 
 app.use(express.json())
@@ -37,8 +37,19 @@ app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
 
-const PORT = 3001
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const person = persons.find(persons => persons.id === id)
+    if(person){
+        response.json(person)
+    }else {
+        console.log("error finding the id");
+        response.status(404).end()
+    }
+})
+
+
 app.listen(PORT, () => {
-    console.log('server running on port 3001');
+    console.log(`Server running on port ${PORT}`);
     
 })
