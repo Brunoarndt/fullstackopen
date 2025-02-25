@@ -1,5 +1,6 @@
 const express = require('express')
-const app = express() 
+const morgan = require('morgan') 
+const app = express()
 const PORT = 3001
 
 let persons = [
@@ -29,6 +30,7 @@ const date = new Date()
 
 app.use(express.json())
 
+app.use(morgan('tiny'))
 
 app.post('/api/persons/:id', (request, response) => {
     const body = request.body
