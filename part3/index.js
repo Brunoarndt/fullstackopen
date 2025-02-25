@@ -30,6 +30,10 @@ const date = new Date()
 
 app.use(express.json())
 
+morgan.token('body', (req) => {
+    return req.method === 'POST' ? JSON.stringify(req.body) : ''
+})
+
 app.use(morgan('tiny'))
 
 app.post('/api/persons/:id', (request, response) => {
