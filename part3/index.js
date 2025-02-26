@@ -36,15 +36,15 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    const person = {
-        id: Math.floor(Math.random() * 101),
+    const person = new Person({
         name: body.name,
         number: body.number,
-    }
+    })
+    
 
-    persons = persons.concat(person)
-
-    response.json(person)
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
 app.get('/info', (request, response) => {
