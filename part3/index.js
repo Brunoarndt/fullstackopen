@@ -44,12 +44,6 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    if(persons.some(persons => persons.name === body.name)){
-        return response.status(400).json({
-            error: 'name must be unique'
-        })
-    }
-
     const person = new Person({
         name: body.name,
         number: body.number,
@@ -59,6 +53,22 @@ app.post('/api/persons', (request, response) => {
     person.save().then(savedPerson => {
         response.json(savedPerson)
     })
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    console.log("ID recebido:", request.params.id);
+    const body = request.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+        .then(person => {
+            response.json(person)
+        })
+        .catch(error => next(error))
 })
 
 app.get('/info', (request, response) => {
