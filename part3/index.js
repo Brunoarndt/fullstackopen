@@ -56,7 +56,6 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-    console.log("ID recebido:", request.params.id);
     const body = request.body
 
     const person = {
@@ -71,8 +70,11 @@ app.put('/api/persons/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-app.get('/info', (request, response) => {
-    response.send(`<h1>Phonebook has info for ${persons.length} people</h1> <h1>${date}</h1>`)
+app.get('/info', (request, response, next) => {
+    Person.find().then((person) => {
+        response.send(`<h1>Phonebook has info for ${person.length} people</h1> <h1>${date}</h1>`)
+    })
+    .catch(error => next(error)) 
 })
 
 app.get('/api/persons', (request, response) => {
@@ -81,16 +83,13 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
-app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(persons => persons.id === id)
-    if(person){
-        response.json(person)
-    }else {
-        console.log("error finding the id");
-        response.status(404).end()
-    }
+app.get('/api/persons/:id', (request, response, next) => {
+    const id = request.params.id
     
+    Person.findById(id).then((person) => {
+        response.json(person)
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
