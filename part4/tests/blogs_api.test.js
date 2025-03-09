@@ -52,6 +52,46 @@ test('a valid blog can be added ', async () => {
         expect(titles).toContain("the great Blog 3")
 })
 
+test('contain likes', async () => {
+    const response = await api.get('/api/blogs')
+
+    expect(response.body[0].id).toBeDefined()
+})
+
+test('blog without title should return 400', async () => {
+    const newBlog = {
+      author: 'Joaquim Lambucanoccio',
+      url: 'localhost:3003',
+      likes: 1235,
+    }
+  
+    try {
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+    } catch (error) {
+      console.error('Error:', error) 
+    }
+  })
+  
+  test('blog without url should return 400', async () => {
+    const newBlog = {
+      title: 'The Great Blog',
+      author: 'Joaquim Lambucanoccio',
+      likes: 1235,
+    }
+  
+    try {
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+    } catch (error) {
+      console.error('Error:', error) 
+    }
+  })
+  
 
 afterAll(async () => {
 await mongoose.connection.close()
