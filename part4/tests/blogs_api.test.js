@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const assert = require('node:assert')
 const helper = require('./test_helper')
 const supertest = require('supertest')
 const app = require('../app')
@@ -7,12 +8,7 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 beforeEach(async () => {
     await Blog.deleteMany({})
-  
-    let blogObject = new Blog(helper.initialBlogs[0])
-    await blogObject.save()
-  
-    blogObject = new Blog(helper.initialBlogs[1])
-    await blogObject.save()
+    await Blog.insertMany(helper.initialBlogs)
   })
 
 test('number of blogs', async () => {
@@ -91,9 +87,25 @@ test('blog without title should return 400', async () => {
       console.error('Error:', error) 
     }
   })
+
+  describe('deletion of a blog', () => {
+    test('succeeds with a status code 204 if id is valid', async () =>{
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToDelete = blogsAtStart[0]
   
+      await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+  
+      const blogsAtEnd = await helper.blogsInDb()
+  
+      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+  
+      const titles = blogsAtEnd.map(t => t.title)
+      assert(!titles.includes(blogToDelete.title))
+    })
+  })
 
 afterAll(async () => {
 await mongoose.connection.close()
 })
-  
