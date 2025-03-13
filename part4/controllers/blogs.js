@@ -2,9 +2,22 @@ const http = require('http')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 
+
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({})
   response.json(blogs)
+})
+
+blogsRouter.put('/:id', async (request, response) => {
+  const {title, author, url, likes} = request.body
+
+  const blog = new Blog({title, author, url, likes})
+
+  const updateBlog = await Blog.findByIdAndUpdate(request.params.id, {title, author, url, likes}, {new: true, runValidators: true})
+  if (!updateBlog) {
+    return response.status(404).json({ error: 'Blog not found' })
+  }
+  response.json(updateBlog)
 })
 
 blogsRouter.post('/', async (request, response) => {
