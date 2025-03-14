@@ -1,22 +1,37 @@
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
+const { error } = require('../utils/logger')
 
-usersRouter.post('/', async (request, response) => {
-    const {username, name, password} = request.body
+usersRouter.post('/', async (request, response, next) => {
+    try{
+        const {username, name, password} = request.body
 
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
+        if(!password || password.lenght < 3){
+            return response.status(400).json({error: 'Password must be at least 3 characters long'})
+        }
 
-    const user = new User({
-        username,
-        name,
-        passwordHash,
-    })
+        const saltRounds = 10
+        const passwordHash = await bcrypt.hash(password, saltRounds)
 
-    const savedUser = await user.save()
+        const user = new User({
+            username,
+            name,
+            passwordHash,
+        })
 
-    response.status(201).json(savedUser)
+        const savedUser = await user.save()
+
+        response.status(201).json(savedUser)
+    }catch(error){
+        if(error.name === 'MongoServerError' && error.code === 11000){
+            response.status(400).json({error: 'Username must be unique'})
+        }
+        else{
+            next(error)
+        }
+    }
+    
 })
 
 usersRouter.get('/', async (request, response) => {
