@@ -37,22 +37,11 @@ blogsRouter.post('/', async (request, response) => {
     return response.status(400).json({ error: 'Title and URL are required' })
   }
 
-  let decodedToken
-  try {
-    const token = getTokenFrom(request)
-    decodedToken = jwt.verify(token, process.env.SECRET)
-  } catch (error) {
-    return response.status(401).json({ error: 'Invalid or expired token' })
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if(!decodedToken.id){
+    return response.status(401).json({error:'token invalid'})
   }
-
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'Token missing or invalid' })
-  }
-
   const user = await User.findById(decodedToken.id) 
-  if (!user) {
-    return response.status(401).json({ error: 'User not found' })
-  }
 
   const blog = new Blog({
     title, 
@@ -60,15 +49,14 @@ blogsRouter.post('/', async (request, response) => {
     url, 
     likes,
     user: user._id
-  })
+   })
 
   const savedBlog = await blog.save()
+
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-
   response.status(201).json(savedBlog)
 })
-
 
 blogsRouter.delete('/:id', async (request, response) => {
   await Blog.findByIdAndDelete(request.params.id)
